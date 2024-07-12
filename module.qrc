@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/img">
+        <file>NG_Module_FTP.png</file>
+    </qresource>
+</RCC>

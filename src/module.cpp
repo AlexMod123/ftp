@@ -57,7 +57,7 @@ bool __stdcall StreamModule::freeResources()
 
 bool __stdcall StreamModule::processData(unsigned char* d, unsigned int l)
 {
-	//получаем IP адреса и порты
+	//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ IP пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ
 	StreamIdentify::idtypeIPv4 ipSrc;
 	StreamIdentify::idtypeIPv4 ipDst;
 
@@ -76,7 +76,7 @@ bool __stdcall StreamModule::processData(unsigned char* d, unsigned int l)
 	uint32_t ipSrc32 = ipFromId(ipSrc);
 	uint32_t ipDst32 = ipFromId(ipDst);
 
-	//ищем соединение по этим адресам и портам
+	//пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 	
 	if ( portSrc == FTP_CONTROL_PORT || portDst == FTP_CONTROL_PORT )
 	{
@@ -88,14 +88,14 @@ bool __stdcall StreamModule::processData(unsigned char* d, unsigned int l)
 		{
 			FTP_ControlConnection* it_conn = it.value();
 
-			//сервер -> клиент
+			//пїЅпїЅпїЅпїЅпїЅпїЅ -> пїЅпїЅпїЅпїЅпїЅпїЅ
 			if (it_conn->ipServer == ipSrc32   &&  it_conn->ipClient == ipDst32 && 
 				it_conn->portServer == portSrc &&  it_conn->portClient == portDst)
 			{
 				c = it_conn;
 				break;
 			}
-			//клиент -> сервер
+			//пїЅпїЅпїЅпїЅпїЅпїЅ -> пїЅпїЅпїЅпїЅпїЅпїЅ
 			if (it_conn->ipServer == ipDst32   &&  it_conn->ipClient == ipSrc32 && 
 				it_conn->portServer == portDst &&  it_conn->portClient == portSrc)
 			{
@@ -119,7 +119,7 @@ bool __stdcall StreamModule::processData(unsigned char* d, unsigned int l)
 
 		bool isResponse = false;
 		int control_code = control_string.left(3).toInt(&isResponse);
-		// разбираем строку 
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 
 		if ( isResponse )
 		{
 			if ( ipSrc32 == c->ipServer )
@@ -130,7 +130,7 @@ bool __stdcall StreamModule::processData(unsigned char* d, unsigned int l)
 		{
 			if (control_string.startsWith("220 "))
 			{
-				//+++запоминаем имя сервера
+				//+++пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 				control_string.remove("220 ");
 				c->m_server_name = control_string.remove(" ready").trimmed();
 			}
@@ -140,13 +140,13 @@ bool __stdcall StreamModule::processData(unsigned char* d, unsigned int l)
 			}
 			if (control_string.startsWith("250 "))
 			{
-				//+++запоминаем имя сервера
+				//+++пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 				control_string.remove("250 ");
 			}
 
 			else if (control_string.startsWith("227 "))
 			{
-				// парсим Ip-адрес/порт пассивного соединения 
+				// пїЅпїЅпїЅпїЅпїЅпїЅ Ip-пїЅпїЅпїЅпїЅпїЅ/пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 
 				// 227 Entering Passive Mode (10,20,90,170,209,69)
 				QRegExp re("^227 .+ \\((\\d{1,3})\\,(\\d{1,3})\\,(\\d{1,3})\\,(\\d{1,3})\\,(\\d{1,3})\\,(\\d{1,3})\\)");
 				int pos = re.indexIn(control_string);
@@ -157,7 +157,7 @@ bool __stdcall StreamModule::processData(unsigned char* d, unsigned int l)
 
 					uint16_t _port = (re.cap(5).toInt() << 8) + re.cap(6).toInt();
 					
-					//открываем dataconnection
+					//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ dataconnection
 					uint64_t _socket = (uint64_t)_ip*65536 + _port;
 
 					FTP_DataConnection* newConn =new FTP_DataConnection(_ip,_port);
@@ -173,7 +173,7 @@ bool __stdcall StreamModule::processData(unsigned char* d, unsigned int l)
 			}
 			else if (control_string.startsWith("226 "))
 			{
-				//+++закрываем dataconnection
+				//+++пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ dataconnection
 				/*
 				if (c->dataConnection)
 				{
@@ -186,7 +186,7 @@ bool __stdcall StreamModule::processData(unsigned char* d, unsigned int l)
 			}
 			else if (control_string.startsWith("150 "))
 			{
-				//запоминаем имя файла для dataconnection
+				//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ dataconnection
 
 			}
 		}
@@ -194,20 +194,20 @@ bool __stdcall StreamModule::processData(unsigned char* d, unsigned int l)
 		{
 			if (control_string.startsWith("USER "))
 			{
-				//+++запоминаем имя юзера
+				//+++пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 				control_string.remove("USER ");
 				c->m_user = control_string.trimmed();
 			}
 			else if (control_string.startsWith("PASS "))
 			{
-				//+++запоминаем пароль юзера
+				//+++пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 				control_string.remove("USER ");
 				c->m_password = control_string.trimmed();
 
 			}
 			else if (control_string.startsWith("PORT "))
 			{
-				//+++ открываем dataconnection на PORT
+				//+++ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ dataconnection пїЅпїЅ PORT
 				QRegExp re(".+ (\\d{1,3})\\,(\\d{1,3})\\,(\\d{1,3})\\,(\\d{1,3})\\,(\\d{1,3})\\,(\\d{1,3})");
 				int pos = re.indexIn(control_string);
 				if (pos > -1) 
@@ -217,7 +217,7 @@ bool __stdcall StreamModule::processData(unsigned char* d, unsigned int l)
 
 					uint16_t _port = (re.cap(5).toInt() << 8) + re.cap(6).toInt();
 
-					//открываем dataconnection
+					//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ dataconnection
 					uint64_t _socket = (uint64_t)_ip*65536 + _port;
 
 					FTP_DataConnection* newConn =new FTP_DataConnection(_ip,_port);
@@ -232,14 +232,14 @@ bool __stdcall StreamModule::processData(unsigned char* d, unsigned int l)
 			}
 			else if (control_string.startsWith("RETR "))
 			{
-				// запоминаем имя файла (с сервера)
+				// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ (пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
 				if (c->dataConnection)
 					c->dataConnection->m_filename = control_string.remove("RETR ");
 
 			}
 			else if (control_string.startsWith("STOR "))
 			{
-				// запоминаем имя файла (на сервер)
+				// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ (пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ)
 				if (c->dataConnection)
 					c->dataConnection->m_filename = control_string.remove("STOR ");
 			}
@@ -261,7 +261,7 @@ bool __stdcall StreamModule::processData(unsigned char* d, unsigned int l)
 
 		if (!have_data_connection && (portDst == FTP_DATA_PORT || portSrc == FTP_DATA_PORT) )
 		{
-			//все по 20 порту считаем data-соединениями
+			//пїЅпїЅпїЅ пїЅпїЅ 20 пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ data-пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 			FTP_DataConnection* newConn =new FTP_DataConnection(ipSrc32,portSrc);
 			data_connections[src_socket] = newConn;
 			have_data_connection = true;
@@ -301,16 +301,16 @@ std::uint32_t StreamModule::make_key( uint32_t ip_src, uint32_t ip_dst, uint16_t
 	return ip_src + ip_dst + (uint32_t)port_src + (uint32_t)port_dst;
 }
 
-//Сигнатуры экпортируемых из файла DLL функций:
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ DLL пїЅпїЅпїЅпїЅпїЅпїЅпїЅ:
 
-//Конструктор класса модуля
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 
 extern "C" __declspec(dllexport) IModule*  getModuleInstance()
 {
 	return reinterpret_cast<IModule*>(new StreamModule());;
 }
 
-//Деструктор класса модуля
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 
 extern "C" __declspec(dllexport) void  removeModuleInstance(IModule* aVal)
 {

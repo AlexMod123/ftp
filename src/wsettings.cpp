@@ -1,4 +1,4 @@
-#include "wsettings.h"
+#include "../wsettings.h"
 
 WSettings::WSettings(QWidget *parent):QWidget(parent)
 {
